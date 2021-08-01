@@ -1,10 +1,32 @@
 import 'package:flutter/material.dart';
 import 'DB/db_helper.dart';
 import 'DB/diary_model.dart';
+import 'pages/calender.dart';
+import 'pages/year_list.dart';
+import 'pages/diary.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyApp createState() => _MyApp();
+}
+
+class _MyApp extends State<MyApp> {
+  int _selectedIndex = 0;
+
+  static final List<Widget> _widgetOptions = <Widget>[
+    CalendarPage(),
+    YearListPage(),
+    DiaryPage()
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,17 +35,32 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Welcome to Flutter'),
         ),
-        body: FutureBuilder(
-          future: DBHelper().getDiary(20210725),
-          builder: (BuildContext context, AsyncSnapshot<Diary?> snapshot) {
-            if (snapshot.hasData) {
-              return Text(snapshot.data.toString());
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
+        body: _widgetOptions.elementAt(_selectedIndex),
+        // FutureBuilder(
+        //   future: DBHelper().getDiary(20210725),
+        //   builder: (BuildContext context, AsyncSnapshot<Diary?> snapshot) {
+        //     if (snapshot.hasData) {
+        //       return Text(snapshot.data.toString());
+        //     } else {
+        //       return Center(
+        //         child: CircularProgressIndicator(),
+        //       );
+        //     }
+        //   },
+        // ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Calendar',
+            ),
+            BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Years'),
+            BottomNavigationBarItem(icon: Icon(Icons.pages), label: 'Diary'),
+          ],
+          selectedItemColor: Colors.red, //선택된 아이템의 색상
+          unselectedItemColor: Colors.black.withOpacity(.60), //선택 안된 아이템의 색상
+          currentIndex: _selectedIndex, //현재 선택된 Index
+          onTap: (int index) => _onItemTapped(index),
         ),
         floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,
