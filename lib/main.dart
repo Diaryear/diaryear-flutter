@@ -30,7 +30,7 @@ class _MyApp extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Welcome to Flutter',
+      title: "Diaryear",
       home: Scaffold(
         appBar: AppBar(
           title: Text('Welcome to Flutter'),
